@@ -21,13 +21,14 @@ class Controls extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: backgroundColor ?? Colors.blue[700],
+        color: backgroundColor ?? primaryColor,
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            blurRadius: 6,
-            offset: const Offset(0, 3),
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 8,
+            spreadRadius: 1,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -54,17 +55,16 @@ class Controls extends StatelessWidget {
     final buttonSpacing = 12.0; // Espaciado entre botones
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
+      padding: const EdgeInsets.only(top: 24.0, bottom: 40.0, left: 16.0, right: 16.0),
       decoration: BoxDecoration(
-        color: Colors.black26,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 15,
-            offset: const Offset(0, -5),
-          ),
-        ],
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.transparent,
+            Colors.black.withOpacity(0.2),
+          ],
+        ),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -112,18 +112,8 @@ class Controls extends StatelessWidget {
             backgroundColor: isGameOver ? Colors.grey[600] : Colors.blue[700],
           ),
           
-          // Botón central (espacio reservado para mantener la estructura)
-          Transform.translate(
-            offset: Offset(0, -buttonSize - buttonSpacing * 1.5),
-            child: Container(
-              width: buttonSize * 0.7,
-              height: buttonSize * 0.7,
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.2),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
+          // Espacio adicional en la parte inferior para mejor accesibilidad
+          SizedBox(height: 20),
         ],
       ),
     );

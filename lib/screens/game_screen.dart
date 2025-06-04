@@ -222,22 +222,31 @@ class _GameScreenState extends State<GameScreen> {
 
   Future<void> _saveScore(String name) async {
     final newScore = HighScore(name: name, score: score, date: DateTime.now());
-
     final prefs = await SharedPreferences.getInstance();
-    final scores = highScores.map((s) => jsonEncode(s.toJson())).toList();
-    scores.add(jsonEncode(newScore.toJson()));
-
-    // Mantener solo los 10 mejores puntajes
-    scores.sort((a, b) {
-      final scoreA = HighScore.fromJson(jsonDecode(a)).score;
-      final scoreB = HighScore.fromJson(jsonDecode(b)).score;
-      return scoreB.compareTo(scoreA);
-    });
-
-    final topScores = scores.take(10).toList();
-
-    await prefs.setStringList('high_scores', topScores);
-    await _loadHighScores();
+    
+    // Obtener las puntuaciones actuales
+    final scores = List<HighScore>.from(highScores);
+    
+    // Solo guardar si el puntaje es lo suficientemente alto
+    if (scores.length < 7 || score > scores.last.score) {
+      // Agregar el nuevo puntaje
+      scores.add(newScore);
+      
+      // Ordenar de mayor a menor
+      scores.sort((a, b) => b.score.compareTo(a.score));
+      
+      // Tomar solo los 7 mejores
+      final topScores = scores.take(7).toList();
+      
+      // Guardar en SharedPreferences
+      await prefs.setStringList(
+        'high_scores',
+        topScores.map((s) => jsonEncode(s.toJson())).toList(),
+      );
+      
+      // Recargar las puntuaciones
+      await _loadHighScores();
+    }
   }
 
   void _showHighScores() {
