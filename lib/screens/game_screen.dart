@@ -27,11 +27,14 @@ class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: scaffoldBgColor,
       appBar: AppBar(
-        title: const Text('Snake Game'),
+        title: const Text('Snake Game', style: TextStyle(color: textColor, fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.leaderboard),
+            icon: const Icon(Icons.leaderboard, color: primaryColor),
             onPressed: () {
               setState(() {
                 showHighScores = !showHighScores;
@@ -42,73 +45,121 @@ class _GameScreenState extends State<GameScreen> {
       ),
       body: Stack(
         children: [
-          // Tablero de juego
+          // Fondo decorativo
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  scaffoldBgColor,
+                  scaffoldBgColor.withOpacity(0.9),
+                  scaffoldBgColor.withOpacity(0.8),
+                ],
+              ),
+            ),
+          ),
+          
+          // Contenido principal
           Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
+              // Puntuación
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(30),
+                  border: Border.all(color: borderColor, width: 1),
+                ),
                 child: Text(
                   'Puntuación: $score',
                   style: const TextStyle(
-                    fontSize: 24,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
+                    color: textColor,
+                    letterSpacing: 1.1,
                   ),
                 ),
               ),
+              
+              // Tablero de juego
               Expanded(
                 child: Center(
                   child: AspectRatio(
                     aspectRatio: 1.0,
-                    child: Container(
-                      color: Colors.black12,
-                      child:
-                          isGameOver
-                              ? Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Text(
-                                      '¡Juego Terminado!',
-                                      style: TextStyle(
-                                        fontSize: 28,
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    ElevatedButton(
-                                      onPressed: startGame,
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.green,
-                                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                                      ),
-                                      child: const Text(
-                                        'JUGAR DE NUEVO',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                              : GameBoard(
-                                snake: snake,
-                                food: food,
-                                cellSize: 20,
+                    child: isGameOver
+                        ? Center(
+                            child: Container(
+                              padding: const EdgeInsets.all(24),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.8),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(color: borderColor, width: 1),
                               ),
-                    ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Text(
+                                    '¡Juego Terminado!',
+                                    style: TextStyle(
+                                      fontSize: 28,
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 24),
+                                  ElevatedButton(
+                                    onPressed: startGame,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: primaryColor,
+                                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(30),
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      'JUGAR DE NUEVO',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : GameBoard(
+                            snake: snake,
+                            food: food,
+                            cellSize: 20,
+                          ),
                   ),
                 ),
               ),
-              Controls(
-                onDirectionChanged: (newDirection) {
-                  setState(() {
-                    nextDirection = newDirection;
-                  });
-                },
-                isGameOver: isGameOver,
+              
+              // Controles
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.7),
+                    ],
+                  ),
+                ),
+                child: Controls(
+                  onDirectionChanged: (newDirection) {
+                    setState(() {
+                      nextDirection = newDirection;
+                    });
+                  },
+                  isGameOver: isGameOver,
+                ),
               ),
             ],
           ),
@@ -131,7 +182,6 @@ class _GameScreenState extends State<GameScreen> {
             ),
         ],
       ),
-
     );
   }
 
